@@ -37,5 +37,5 @@
 - 静态资源：HTML/CSS/JavaScript
 
 ## 作者信息
-- **姓名**：戴佩妮  
+- **姓名**：戴佩旎
 - **GitHub**：[niicfcy](https://github.com/niicfcy)  
