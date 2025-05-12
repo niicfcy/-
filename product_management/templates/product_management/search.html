@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>搜索结果："{{ query }}"</h2>
+
+    <!-- 搜索框 -->
+    <form class="mb-4" action="{% url 'product_management:search' %}">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control"
+                   placeholder="继续搜索..." value="{{ query }}">
+            <button class="btn btn-primary" type="submit">搜索</button>
+        </div>
+    </form>
+
+    {% if products %}
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="text-muted">
+                            相关度:
+                            <span class="badge bg-{% if product.relevance >= 2 %}success{% elif product.relevance == 1 %}warning{% else %}secondary{% endif %}">
+                                {{ product.relevance }}星
+                            </span>
+                        </p>
+                        <!-- 其他商品信息 -->
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <h4>暂无相关商品</h4>
+            <p>建议尝试其他搜索词，或浏览<a href="{% url 'product_management:product_list' %}">全部商品</a></p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

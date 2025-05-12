@@ -1,0 +1,149 @@
+<!-- product_management/templates/product_management/cart.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的购物车</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+        }
+        .quantity-form {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            margin: 0 10px;
+        }
+        .btn {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-danger {
+            background-color: #f44336;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .total-section {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 我的购物车</h1>
+
+        {% if cart_details %}
+        <table>
+            <thead>
+                <tr>
+                    <th>商品名称</th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <th>小计</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_details %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>¥{{ item.product.price }}</td>
+                    <td>
+                        <form method="post" action="{% url 'product_management:update_cart' item.product.id %}" class="quantity-form">
+                            {% csrf_token %}
+                            <button type="submit" name="action" value="decrease" class="btn">-</button>
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" class="quantity-input">
+                            <button type="submit" name="action" value="increase" class="btn">+</button>
+                        </form>
+                    </td>
+                    <td>¥{{ item.total_item_price }}</td>
+                    <td>
+                        <a href="{% url 'product_management:remove_from_cart' item.product.id %}" class="btn btn-danger">移除</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <p><strong>商品总数: {{ cart_details|length }} 件</strong></p>
+            <p><strong>总金额: ¥{{ total_price }}</strong></p>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{% url 'product_management:product_list' %}" class="btn">继续购物</a>
+            <a href="{% url 'product_management:checkout' %}" class="btn" style="background-color: #2196F3;">结算</a>
+        </div>
+        {% else %}
+        <div class="empty-cart">
+            <h2>您的购物车是空的</h2>
+            <p>快去选购商品吧~</p>
+            <a href="{% url 'product_management:product_list' %}" class="btn">去逛逛</a>
+        </div>
+        {% endif %}
+
+        <!-- 显示操作消息 -->
+        {% if messages %}
+        <div style="margin-top: 20px; padding: 10px; background-color: #e8f5e9; border-left: 4px solid #4CAF50;">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

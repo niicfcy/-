@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>登录 / 注册</title>
+</head>
+<body>
+    <h1>欢迎</h1>
+    {% if messages %}
+        <ul>
+            {% for msg in messages %}
+                <li>{{ msg }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div style="display: flex; justify-content: space-around;">
+        <!-- 登录 -->
+        <form method="post">
+            {% csrf_token %}
+            <h2>已有账号登录</h2>
+            <label>用户名: <input type="text" name="login_username"></label><br>
+            <label>密码: <input type="password" name="login_password"></label><br>
+            <button type="submit" name="login">登录</button>
+        </form>
+
+        <!-- 注册 -->
+        <form method="post">
+            {% csrf_token %}
+            <h2>新用户注册</h2>
+            <label>用户名: <input type="text" name="register_username"></label><br>
+            <label>密码: <input type="password" name="register_password"></label><br>
+            <label>确认密码: <input type="password" name="register_confirm"></label><br>
+            <button type="submit" name="register">注册</button>
+        </form>
+    </div>
+</body>
+</html>

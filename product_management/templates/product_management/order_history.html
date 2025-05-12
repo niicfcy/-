@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的历史订单</title>
+</head>
+<body>
+    <h2>历史订单</h2>
+    <div class="order-list">
+        {% for order in orders %}
+            <div class="order">
+                <h3>订单号：{{ order.order_number }}</h3>
+                <p>总金额：{{ order.total_amount }}</p>
+                <p>支付方式：{{ order.get_payment_method_display }}</p>
+                <p>状态：{{ order.status }}</p>
+                <p>收货人：{{ order.receiver_name }}</p>
+                <a href="{% url 'product_management:order_detail' order.id %}">查看订单详情</a>
+            </div>
+        {% empty %}
+            <p>您还没有历史订单。</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!-- product_management/templates/product_management/checkout.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>结算订单</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .checkout-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .order-summary, .delivery-info, .payment-method {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f8f8;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #f1f8e9;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .section-title {
+            color: #4CAF50;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <h1>结算订单</h1>
+
+        <!-- 订单摘要 -->
+        <div class="order-summary">
+            <h2 class="section-title">订单摘要</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>商品</th>
+                        <th>单价</th>
+                        <th>数量</th>
+                        <th>小计</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_details %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>¥{{ item.product.price }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>¥{{ item.total_item_price }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="total-row">
+                        <td colspan="3">总计</td>
+                        <td>¥{{ total_price }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 收货信息 -->
+        <div class="delivery-info">
+            <h2 class="section-title">收货信息</h2>
+            <form method="post" action="{% url 'product_management:process_checkout' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">收货人姓名</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">联系电话</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">详细地址</label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="notes">备注</label>
+                    <textarea id="notes" name="notes" rows="2"></textarea>
+                </div>
+        </div>
+
+        <!-- 支付方式 -->
+        <div class="payment-method">
+            <h2 class="section-title">支付方式</h2>
+            <div class="form-group">
+                <select name="payment_method" required>
+                    <option value="">-- 请选择支付方式 --</option>
+                    <option value="wechat">微信支付</option>
+                    <option value="alipay">支付宝</option>
+                    <option value="bank">银行转账</option>
+                    <option value="cash">货到付款</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 提交按钮 -->
+        <button type="submit" class="btn">提交订单</button>
+            </form>
+    </div>
+</body>
+</html>
