@@ -35,3 +35,7 @@
 ### 前端
 - 模板引擎：Django Templates（后端渲染）
 - 静态资源：HTML/CSS/JavaScript
+
+## 作者信息
+- **姓名**：戴佩妮  
+- **GitHub**：[niicfcy](https://github.com/niicfcy)  
